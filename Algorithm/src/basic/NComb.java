@@ -1,9 +1,8 @@
-package day5_BF;
+package basic;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
-public class NPCombination {
+public class NComb {
 	static int N, R, input[];
 	
 	public static void main(String[] args) {
