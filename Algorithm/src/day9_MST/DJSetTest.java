@@ -3,11 +3,12 @@ package day9_MST;
 import java.util.Arrays;
 
 public class DJSetTest {
-	static int[] p;
+	static int[] p, rank;
 	static int N;
 	
 	public static void makeSet() {
 		p = new int[N];
+		rank = new int[N];
 		for(int i=0; i<N; i++) {
 			p[i] = i;
 		}
@@ -23,7 +24,14 @@ public class DJSetTest {
 		int bRoot = findSet(b);
 		if(aRoot == bRoot) return false;
 		
+		if(rank[aRoot] < rank[bRoot]) {
+			int tmp = aRoot;
+			aRoot = bRoot;
+			bRoot = tmp;
+		}
+			
 		p[bRoot] = aRoot;
+		if(rank[aRoot] == rank[bRoot]) rank[aRoot]++;
 		return true;
 	}
 	
