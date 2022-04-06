@@ -3,9 +3,27 @@ package basic;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Prim {
+	static class Edge implements Comparable<Edge>{
+		int dist, next;
+
+		public Edge(int dist, int next) {
+			super();
+			this.dist = dist;
+			this.next = next;
+		}
+
+		@Override
+		public int compareTo(Edge o) {
+			return this.dist - o.dist;
+		}
+	}
+	
 	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
@@ -13,6 +31,8 @@ public class Prim {
 		int[][] adjMatrix = new int[N][N];
 		int[] minEdge = new int[N];
 		boolean[] visited = new boolean[N];
+		PriorityQueue<Edge> pq = new PriorityQueue<>();
+		Queue<Integer> q = new LinkedList<>();
 		
 		for(int i=0; i<N; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -23,25 +43,24 @@ public class Prim {
 		}
 		
 		int result = 0;
-		minEdge[0] = 0;
+		q.add(0);
 		
-		for(int c=0; c<N; c++) {
-			int min = Integer.MAX_VALUE;
-			int minVertex = 0;
+		while(!q.isEmpty()) {
+			int now = q.poll();
+			visited[now] = true;
 			
 			for(int i=0; i<N; i++) {
-				if(!visited[i] && min>minEdge[i]) {
-					min = minEdge[i];
-					minVertex = i;
-				}
+				if(visited[i]) continue;
+				if(adjMatrix[now][i]>0) pq.add(new Edge(i, adjMatrix[now][i]));
 			}
 			
-			visited[minVertex] = true;
-			result += min;
-			
-			for(int i=0; i<N; i++) {
-				if(!visited[i] && adjMatrix[minVertex][i]!=0 &&minEdge[i]>adjMatrix[minVertex][i]) {
-					minEdge[i] = adjMatrix[minVertex][i];
+			while(!pq.isEmpty()) {
+				Edge e = pq.poll();
+				if(!visited[e.next]) {
+					q.add(e.next);
+					visited[e.next] = true;
+					result += e.dist;
+					break;
 				}
 			}
 		}
